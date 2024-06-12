@@ -9,20 +9,22 @@ class EventService {
     async getEventById(id: string): Promise<Event | IEvent | null> {
       return EventModel.findById(id).exec();
     }
-    async getEvents(): Promise<(Event | IEvent)[]> {
-      return EventModel.find().exec();
+    async getEvents(limit: number, page: number): Promise<(Event | IEvent)[]> {
+      return EventModel.find().limit(limit).skip(page-1).exec();
     }
   
-    async createEvent(userDto: CreateEventDto): Promise<Event | IEvent> {
-        const newEvent = new EventModel ({
-            name: userDto.name,
-            description: userDto.description,
-            date: new Date(userDto.date),
-            location: userDto.location,
-            duration: userDto.duration, 
-    });
-        await newEvent.save();
-        return newEvent;
+    async createEvent(createEventDto: CreateEventDto): Promise<IEvent> {
+      const { name, description, date, location ,duration} = createEventDto;
+      const newEvent = new EventModel({
+        name,
+        description,
+        date: new Date(date),
+        location,
+        duration
+      });
+  
+      await newEvent.save();
+      return newEvent;
     }
   }
   

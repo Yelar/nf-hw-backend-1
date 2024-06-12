@@ -11,20 +11,29 @@ class EventController {
         this.eventService = eventService;
     }
 
-    createEvent = async (req:Request,res:Response) =>{
-        try{
-            const event: CreateEventDto =req.body;
-            const newEvent = await this.eventService.createEvent(event);
-            res.status(201).json(newEvent);
-        }catch(error:any){
-            res.status(500).json({ error: error.message });
+    createEvent = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const createEventDto: CreateEventDto = req.body;
+          const event = await this.eventService.createEvent(createEventDto);
+          res.status(201).json(event);
+        } catch (error: any) {
+          res.status(500).send({ error: error.message });
         }
-    }
+      }
+
 
     getEvents = async (req:Request, res:Response) =>{
         try{
-            const events = await this.eventService.getEvents();
-            res.status(200).json(events);
+            const {limit, page} = req.query;
+            console.log(limit, page);
+            
+            const events = await this.eventService.getEvents(Number(limit), Number(page));
+            const count =  events.length;
+            res.status(200).json({
+                events, 
+                totalPages: Math.ceil(count / Number(limit)),
+                currentPage: page,
+            });
         }catch (error: any) {
             res.status(500).json({ error: error.message });
           }

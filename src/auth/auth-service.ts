@@ -21,7 +21,6 @@ class AuthService {
   async registerUser(createUserDto: CreateUserDto): Promise<IUser> {
     const { email, password, username, city } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = new UserModel({
       email,
       username,
