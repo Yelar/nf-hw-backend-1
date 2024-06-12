@@ -5,6 +5,7 @@ const authService = new AuthService();
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
+  console.log(req.user);
   if (!authHeader) {
     return res.status(401).json({ message: 'Authorization header missing' });
   }
@@ -17,5 +18,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   }
 
   (req as any).user = payload;
+  
   next();
 };

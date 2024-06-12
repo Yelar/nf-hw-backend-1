@@ -11,30 +11,30 @@ class EventController {
         this.eventService = eventService;
     }
 
-    createEvent = (req:Request,res:Response) =>{
+    createEvent = async (req:Request,res:Response) =>{
         try{
             const event: CreateEventDto =req.body;
-            const newEvent = this.eventService.createEvent(event);
+            const newEvent = await this.eventService.createEvent(event);
             res.status(201).json(newEvent);
         }catch(error:any){
             res.status(500).json({ error: error.message });
         }
     }
 
-    getEvents  = (req:Request, res:Response) =>{
+    getEvents = async (req:Request, res:Response) =>{
         try{
-            const events = this.eventService.getEvents();
+            const events = await this.eventService.getEvents();
             res.status(200).json(events);
         }catch (error: any) {
             res.status(500).json({ error: error.message });
           }
     }
 
-    getEventById = (req:Request, res:Response) =>{
+    getEventById = async (req:Request, res:Response) =>{
         try{
             const params = req.params;
-            const id = parseInt(params.id);
-            const event = this.eventService.getEventById(id);
+            const {id} = params;
+            const event = await this.eventService.getEventById(id);
             if(!event){
                 res.status(404).json({error:"Event not found"});
             }else{
@@ -44,6 +44,7 @@ class EventController {
             res.status(500).json({ error: error.message });
         }
     }
+    
 }
 
 export default EventController;

@@ -1,14 +1,20 @@
 import { Request, Response } from 'express';
 import { CreateUserDto } from './dtos/CreateUser.dto';
 import AuthService from './auth-service';
-
 class AuthController {
   private authService: AuthService;
 
   constructor(authService: AuthService) {
     this.authService = authService;
   }
-
+  eventInCity = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const events = await this.authService.eventsInCity((req as any).user.email);
+      res.status(201).json(events);
+    } catch (err) {
+      res.status(500).json({ message: 'Error getting events in city' });
+    }
+  }
   registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const createUserDto: CreateUserDto = req.body;

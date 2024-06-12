@@ -5,4 +5,4 @@ export interface CreateEventDto {
     location:string;
     duration:string;
   }
-  
+   
